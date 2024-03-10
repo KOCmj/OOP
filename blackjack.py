@@ -32,18 +32,22 @@ class Cards():
         
     def hit_cards(self):
         if len(self.hands['player']) < 5:
-            leftover_deck = [card for card in self.deck if card not in self.hands['player']]
-            card = random.choice(leftover_deck)
-            self.hands['player'].append(card)
-            print(f'You receievd: {card['tiers']} of {card['suit']}')
-        else: 
-            print("You have been busted.")
-        if len(self.hands['dealer']) < 5:
-            leftover_deck = [card for card in self.deck if card not in self.hands['dealer']]
-            card = random.choice(leftover_deck)
-            self.hands['dealer'].append(card)
-        else: 
-            print("I have busted.")
+            player_sum = sum(int(card['tiers']) if card['tiers'].isdigit() else 10 for card in self.hands['player'])
+            if player_sum <= 21:
+                leftover_deck = [card for card in self.deck if card not in self.hands['player']]
+                card = random.choice(leftover_deck)
+                self.hands['player'].append(card)
+                print(f'You receievd: {card['tiers']} of {card['suit']}')
+            else: 
+                print("You have been busted.")
+        elif len(self.hands['dealer']) < 5:
+            dealer_sum = sum(int(card['tiers']) if card['tiers'].isdigit() else 10 for card in self.hands['dealer'])
+            if dealer_sum <= 21:
+                leftover_deck = [card for card in self.deck if card not in self.hands['dealer']]
+                card = random.choice(leftover_deck)
+                self.hands['dealer'].append(card)
+            else: 
+                print("I have busted.")
 
     def black_jack(self):
         has_ace = False
@@ -93,7 +97,6 @@ def PlayBlackJack():
         elif i.lower() == 'stand':
             my_cards.stand_compare()
         elif i.lower() == 'q':
-            my_cards.stand_compare()
             break
         else:
             print("GGs")
